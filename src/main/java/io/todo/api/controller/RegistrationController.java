@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -36,12 +37,13 @@ public class RegistrationController {
     public ResponseEntity<? extends Object> registerNewUser(@RequestBody NewUserRequestModel model){
         String password = encodePassword(model.getPassword());
         UserDetailsBO userDetailsBO = buildUserDetailsBO(model, password);
-        userService.saveUserDetails(userDetailsBO);
+
         try {
+            userService.saveUserDetails(userDetailsBO);
             return ResponseEntity
                     .created(new URI("/users/" + model.getUsername()))
                     .build();
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | MessagingException e) {
             e.printStackTrace();
             final String errorMessage = "We are facing some issue. Please try again later or contact admin.";
             return ResponseEntity

@@ -4,24 +4,33 @@ import io.todo.api.entity.User;
 import io.todo.api.entity.UserProfile;
 import io.todo.api.model.bo.UserDetailsBO;
 import io.todo.api.repository.UserRepository;
+import io.todo.api.security.jwt.JwtBean;
+import io.todo.api.security.jwt.JwtUtils;
+import io.todo.api.service.EmailService;
 import io.todo.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
+
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl implements UserService {
+    private final EmailService emailService;
     private final UserRepository userRepository;
+    private final JwtBean jwtBean;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(EmailService emailService, UserRepository userRepository, JwtBean jwtBean) {
+        this.emailService = emailService;
         this.userRepository = userRepository;
+        this.jwtBean = jwtBean;
     }
 
 
     @Override
-    public void saveUserDetails(UserDetailsBO userDetailsBO) {
+    public void saveUserDetails(UserDetailsBO userDetailsBO) throws MessagingException {
         if (!validateUserDetails(userDetailsBO))
             // TODO: Custom exception: Validation ex
             throw new RuntimeException("Invalid Inputs");
@@ -32,7 +41,10 @@ public class UserServiceImpl implements UserService {
 
         User user = buildUser(userDetailsBO);
         userRepository.persist(user);
-        // TODO: Send an email notification for verification
+        emailService.sendNotification(user.getUserProfile().getEmail(),
+                                        user.getUsername(),
+                                        user.getVerificationToken(),
+                                        user.getUserProfile().getName());
     }
 
     private User buildUser(UserDetailsBO userDetailsBO) {
@@ -51,8 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private String generateToken(UserDetailsBO userDetailsBO) {
-        // TODO: Impl generate token method
-        return "dummy-token";
+        return JwtUtils.generateToken(userDetailsBO.getUsername(), jwtBean);
     }
 
 
