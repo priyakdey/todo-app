@@ -2,6 +2,8 @@ package io.todo.api.repository;
 
 import io.todo.api.entity.User;
 
+import java.util.Optional;
+
 public interface UserRepository {
 
     /**
@@ -18,4 +20,11 @@ public interface UserRepository {
      * @return
      */
     boolean ifExists(String username, String email);
+
+    /**
+     * Method returns the User fetched by username
+     * @param username
+     * @return @{@link Optional<User>}
+     */
+    Optional<User> findById(String username);
 }

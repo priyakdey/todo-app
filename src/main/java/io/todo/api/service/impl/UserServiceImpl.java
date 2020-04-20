@@ -71,4 +71,23 @@ public class UserServiceImpl implements UserService {
         //TODO: Implement validation of the data
         return true;
     }
+
+
+    @Override
+    public void enableAccount(String username, String token) {
+        User user = userRepository.findById(username)
+                                   .orElseThrow(
+                                           // TODO: Custom exception -> No user found exception
+                                        () -> new RuntimeException("Username does not exists. This is a bad token")
+                                    );
+        boolean isValid = JwtUtils.validateToken(token, user.getVerificationToken(), jwtBean);
+
+        if (isValid){
+            user.setEnabled(Boolean.TRUE);
+            user.setVerificationToken(null);
+        } else {
+            // TODO: Custom exception: Invalid token from email
+            throw new RuntimeException("Invalid Token from email");
+        }
+    }
 }

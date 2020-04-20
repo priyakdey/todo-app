@@ -11,7 +11,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private Boolean isEnabled = Boolean.FALSE;
+    private Boolean enabled = Boolean.FALSE;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, optional = false)
     @JoinColumn(name = "user_profile_id", referencedColumnName = "id")
@@ -39,11 +39,11 @@ public class User {
     }
 
     public Boolean isEnabled() {
-        return isEnabled;
+        return enabled;
     }
 
-    public void isEnabled(Boolean enabled) {
-        isEnabled = enabled;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public UserProfile getUserProfile() {

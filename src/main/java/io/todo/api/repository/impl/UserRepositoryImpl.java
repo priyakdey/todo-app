@@ -9,6 +9,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.TypedQuery;
 
+import java.util.Optional;
+
 import static io.todo.api.repository.impl.UserQueries.*;
 
 @Repository
@@ -41,5 +43,11 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public Optional<User> findById(String username) {
+        User user = em.find(User.class, username, LockModeType.PESSIMISTIC_READ);
+        return Optional.ofNullable(user);
     }
 }

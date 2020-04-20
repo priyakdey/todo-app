@@ -12,4 +12,13 @@ public interface UserService {
      */
     void saveUserDetails(UserDetailsBO userDetailsBO) throws MessagingException;
 
+
+    /**
+     * This method is to verify if the token is valid
+     * If valid token received, user account to be enabled
+     * If not, request should be rejected with an exception
+     * @param username
+     * @param token
+     */
+    void enableAccount(String username, String token);
 }
