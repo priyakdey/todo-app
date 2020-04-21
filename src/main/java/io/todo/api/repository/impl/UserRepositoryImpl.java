@@ -1,7 +1,6 @@
 package io.todo.api.repository.impl;
 
 import io.todo.api.entity.User;
-import io.todo.api.entity.dto.UserDetailsDTO;
 import io.todo.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -54,14 +53,14 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<UserDetailsDTO> loadByUsername(String username) {
+    public Optional<User> loadByUsername(String username) {
         final String queryString = LOAD_BY_USERNAME.getQueryString();
-        TypedQuery<UserDetailsDTO> query = em.createQuery(queryString, UserDetailsDTO.class);
+        TypedQuery<User> query = em.createQuery(queryString, User.class);
         query.setParameter("username", username);
 
         try {
-            UserDetailsDTO record = query.getSingleResult();
-            return Optional.of(record);
+            User user = query.getSingleResult();
+            return Optional.of(user);
         } catch (NoResultException e) {
             return Optional.empty();
         }

@@ -1,6 +1,6 @@
 package io.todo.api.service.impl;
 
-import io.todo.api.entity.dto.UserDetailsDTO;
+import io.todo.api.entity.User;
 import io.todo.api.repository.UserRepository;
 import io.todo.api.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +11,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -26,25 +27,30 @@ public class LoginServiceImpl implements LoginService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetailsDTO userDetailsDTO = userRepository.loadByUsername(username)
-                                                        .orElseThrow(
-                                                                () -> new UsernameNotFoundException("user not found")
-                                                        );
+        User user = userRepository.loadByUsername(username)
+                                .orElseThrow(
+                                    () -> new RuntimeException("No user found by username")
+                                );
+
         return new UserDetails() {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
-                //TODO: Implement Authority based ACL
-                return new ArrayList<SimpleGrantedAuthority>();
+                Set<SimpleGrantedAuthority> grantedAuthorities = new HashSet<>();
+                user.getAuthorities()
+                                    .stream()
+                                    .map(userAuthority -> new SimpleGrantedAuthority(userAuthority.getPermission()))
+                                    .forEach(grantedAuthorities::add);
+                return grantedAuthorities;
             }
 
             @Override
             public String getPassword() {
-                return userDetailsDTO.getPassword();
+                return user.getPassword();
             }
 
             @Override
             public String getUsername() {
-                return userDetailsDTO.getUsername();
+                return user.getUsername();
             }
 
             @Override
@@ -61,13 +67,13 @@ public class LoginServiceImpl implements LoginService {
 
             @Override
             public boolean isCredentialsNonExpired() {
-                // TODO: No need to change creds
+                // TODO: No need to change creds/ credentials do not expire
                 return true;
             }
 
             @Override
             public boolean isEnabled() {
-                return userDetailsDTO.isEnabled();
+                return user.isEnabled();
             }
         };
 

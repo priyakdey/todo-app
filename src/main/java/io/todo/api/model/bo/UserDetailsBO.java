@@ -1,5 +1,9 @@
 package io.todo.api.model.bo;
 
+import io.todo.api.entity.UserAuthority;
+
+import java.util.Set;
+
 public class UserDetailsBO {
     private final String username;
     private String password;
@@ -7,6 +11,7 @@ public class UserDetailsBO {
     private String verificationToken;
     private String name;
     private String email;
+
 
     private UserDetailsBO(String username) {
         this.username = username;

@@ -1,6 +1,7 @@
 package io.todo.api.service.impl;
 
 import io.todo.api.entity.User;
+import io.todo.api.entity.UserAuthority;
 import io.todo.api.entity.UserProfile;
 import io.todo.api.model.bo.UserDetailsBO;
 import io.todo.api.repository.UserRepository;
@@ -40,6 +41,8 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("User already registered");
 
         User user = buildUser(userDetailsBO);
+        user.getAuthorities().add(UserAuthority.USER_UPDATE);
+        user.getAuthorities().add(UserAuthority.USER_READ);
         userRepository.persist(user);
         emailService.sendNotification(user.getUserProfile().getEmail(),
                                         user.getUsername(),

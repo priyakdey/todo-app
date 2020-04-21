@@ -1,7 +1,6 @@
 package io.todo.api.repository;
 
 import io.todo.api.entity.User;
-import io.todo.api.entity.dto.UserDetailsDTO;
 
 import java.util.Optional;
 
@@ -34,5 +33,5 @@ public interface UserRepository {
      * @param username
      * @return
      */
-    Optional<UserDetailsDTO> loadByUsername(String username);
+    Optional<User> loadByUsername(String username);
 }

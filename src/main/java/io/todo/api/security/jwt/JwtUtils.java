@@ -61,7 +61,7 @@ public class JwtUtils {
         String issuer = claims.getIssuer();
         Date expiration = claims.getExpiration();
 
-        if (Objects.equals(subject, username) && Objects.equals(issuer, jwtBean.getIssuer()) && expiration.before(new Date()))
+        if (Objects.equals(subject, username) && Objects.equals(issuer, jwtBean.getIssuer()) && expiration.after(new Date()))
             return true;
 
         return false;

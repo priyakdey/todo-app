@@ -1,6 +1,8 @@
 package io.todo.api.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "USERS")
@@ -18,6 +20,12 @@ public class User {
     private UserProfile userProfile;
 
     private String verificationToken;
+
+    @ElementCollection
+    @JoinTable(name = "user_authorities", joinColumns = @JoinColumn(name = "username"))
+    @Column(name = "authorities", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Set<UserAuthority> authorities = new HashSet<>();
 
     public User() {
     }
@@ -60,5 +68,13 @@ public class User {
 
     public void setVerificationToken(String verificationToken) {
         this.verificationToken = verificationToken;
+    }
+
+    public Set<UserAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<UserAuthority> authorities) {
+        this.authorities = authorities;
     }
 }
