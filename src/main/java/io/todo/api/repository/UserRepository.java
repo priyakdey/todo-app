@@ -1,13 +1,14 @@
 package io.todo.api.repository;
 
 import io.todo.api.entity.User;
+import io.todo.api.entity.dto.UserDetailsDTO;
 
 import java.util.Optional;
 
 public interface UserRepository {
 
     /**
-     * Method is to persit user credentials and user profile details
+     * Method is to persist user credentials and user profile details
      * @param user
      */
     void persist(User user);
@@ -27,4 +28,11 @@ public interface UserRepository {
      * @return @{@link Optional<User>}
      */
     Optional<User> findById(String username);
+
+    /**
+     * Method to fetch only authentication related details for the user
+     * @param username
+     * @return
+     */
+    Optional<UserDetailsDTO> loadByUsername(String username);
 }

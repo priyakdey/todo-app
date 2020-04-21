@@ -1,17 +1,19 @@
 package io.todo.api.repository.impl;
 
 import io.todo.api.entity.User;
+import io.todo.api.entity.dto.UserDetailsDTO;
 import io.todo.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-
 import java.util.Optional;
 
-import static io.todo.api.repository.impl.UserQueries.*;
+import static io.todo.api.repository.impl.UserQueries.IF_EXISTS;
+import static io.todo.api.repository.impl.UserQueries.LOAD_BY_USERNAME;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
@@ -49,5 +51,19 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> findById(String username) {
         User user = em.find(User.class, username, LockModeType.PESSIMISTIC_READ);
         return Optional.ofNullable(user);
+    }
+
+    @Override
+    public Optional<UserDetailsDTO> loadByUsername(String username) {
+        final String queryString = LOAD_BY_USERNAME.getQueryString();
+        TypedQuery<UserDetailsDTO> query = em.createQuery(queryString, UserDetailsDTO.class);
+        query.setParameter("username", username);
+
+        try {
+            UserDetailsDTO record = query.getSingleResult();
+            return Optional.of(record);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }
