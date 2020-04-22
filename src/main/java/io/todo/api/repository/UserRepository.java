@@ -34,4 +34,11 @@ public interface UserRepository {
      * @return
      */
     Optional<User> loadByUsername(String username);
+
+    /**
+     * Metho to return an user with list of task
+     * @param username
+     * @return
+     */
+    User fetchTaskList(String username);
 }

@@ -1,7 +1,9 @@
 package io.todo.api.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,6 +28,9 @@ public class User {
     @Column(name = "authorities", nullable = false)
     @Enumerated(EnumType.STRING)
     private Set<UserAuthority> authorities = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private List<Task> tasks = new ArrayList<>();
 
     public User() {
     }
@@ -76,5 +81,19 @@ public class User {
 
     public void setAuthorities(Set<UserAuthority> authorities) {
         this.authorities = authorities;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+
+    public void addTask(Task task) {
+        task.setUser(this);
+        this.getTasks().add(task);
     }
 }

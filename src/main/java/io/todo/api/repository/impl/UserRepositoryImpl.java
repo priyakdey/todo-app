@@ -11,8 +11,9 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.Optional;
 
-import static io.todo.api.repository.impl.UserQueries.IF_EXISTS;
-import static io.todo.api.repository.impl.UserQueries.LOAD_BY_USERNAME;
+import static io.todo.api.repository.query.UserQueries.FETCH_TASKS;
+import static io.todo.api.repository.query.UserQueries.IF_EXISTS;
+import static io.todo.api.repository.query.UserQueries.LOAD_BY_USERNAME;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
@@ -64,5 +65,16 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (NoResultException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public User fetchTaskList(String username) {
+        final String queryString = FETCH_TASKS.getQueryString();
+        TypedQuery<User> query = em.createQuery(queryString, User.class);
+        query.setParameter("username", username);
+
+        // query.getSingleResult will never throw NoResultException,
+        // since method can only be invoked if user exists/authenticated/authorized
+        return query.getSingleResult();
     }
 }
