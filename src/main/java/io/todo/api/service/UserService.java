@@ -1,8 +1,10 @@
 package io.todo.api.service;
 
+import io.todo.api.entity.User;
 import io.todo.api.model.bo.UserDetailsBO;
 
 import javax.mail.MessagingException;
+import java.util.List;
 
 public interface UserService {
 
@@ -21,4 +23,5 @@ public interface UserService {
      * @param token
      */
     void enableAccount(String username, String token);
+
 }

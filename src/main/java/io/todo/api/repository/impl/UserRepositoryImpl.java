@@ -9,11 +9,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.Optional;
 
-import static io.todo.api.repository.query.UserQueries.FETCH_TASKS;
-import static io.todo.api.repository.query.UserQueries.IF_EXISTS;
-import static io.todo.api.repository.query.UserQueries.LOAD_BY_USERNAME;
+import static io.todo.api.repository.query.UserQueries.*;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
@@ -77,4 +76,11 @@ public class UserRepositoryImpl implements UserRepository {
         // since method can only be invoked if user exists/authenticated/authorized
         return query.getSingleResult();
     }
+
+    @Override
+    public List<User> fetchUserNotVerified() {
+        //TODO: to be completed
+        return null;
+    }
+
 }

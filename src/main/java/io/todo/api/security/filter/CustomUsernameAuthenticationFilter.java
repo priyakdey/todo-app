@@ -96,7 +96,7 @@ public class CustomUsernameAuthenticationFilter extends UsernamePasswordAuthenti
         Date iat = new Date();
         Date exp = new Date(System.currentTimeMillis());
 
-        String token = jwtBean.getPrefix() + " " + JwtUtils.generateToken(username, jwtBean);
+        String token = jwtBean.getPrefix() + " " + JwtUtils.generateAuthorizationToken(username, jwtBean);
 
         response.setHeader("Username", username);
         response.addHeader(AUTHORIZATION, token);

@@ -44,8 +44,7 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistsException("User already registered");
 
         User user = buildUser(userDetailsBO);
-        user.getAuthorities().add(UserAuthority.USER_UPDATE);
-        user.getAuthorities().add(UserAuthority.USER_READ);
+
         userRepository.persist(user);
 
         /**
@@ -76,11 +75,15 @@ public class UserServiceImpl implements UserService {
 
         user.setUserProfile(userProfile);
 
+
+        user.getAuthorities().add(UserAuthority.USER_UPDATE);
+        user.getAuthorities().add(UserAuthority.USER_READ);
+
         return user;
     }
 
     private String generateToken(UserDetailsBO userDetailsBO) {
-        return JwtUtils.generateToken(userDetailsBO.getUsername(), jwtBean);
+        return JwtUtils.generateVerificationToken(userDetailsBO.getUsername(), jwtBean);
     }
 
 

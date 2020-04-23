@@ -2,6 +2,7 @@ package io.todo.api.repository;
 
 import io.todo.api.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
@@ -41,4 +42,7 @@ public interface UserRepository {
      * @return
      */
     User fetchTaskList(String username);
+
+
+    List<User> fetchUserNotVerified();
 }

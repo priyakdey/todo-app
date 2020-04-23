@@ -4,6 +4,7 @@ public class JwtBean {
     private String prefix;
     private String issuer;
     private Long expirationTimeInMillis;
+    private Long verificationExpirationTimeInMillis;
     private String key;
 
     public JwtBean() {
@@ -39,5 +40,13 @@ public class JwtBean {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public Long getVerificationExpirationTimeInMillis() {
+        return verificationExpirationTimeInMillis;
+    }
+
+    public void setVerificationExpirationTimeInMillis(Long verificationExpirationTimeInMillis) {
+        this.verificationExpirationTimeInMillis = verificationExpirationTimeInMillis;
     }
 }

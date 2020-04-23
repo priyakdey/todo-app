@@ -11,11 +11,11 @@ public class JwtUtils {
 
 
     /**
-     * Util method to generate a JWT token
+     * Util method to generate a email verification token
      * @param username
-     * @return
+     * @return String
      */
-    public static String generateToken(String username, JwtBean jwtBean) {
+    public static String generateAuthorizationToken(String username, JwtBean jwtBean) {
         Date iat = new Date();
         Date exp = new Date(System.currentTimeMillis() + jwtBean.getExpirationTimeInMillis());
 
@@ -26,6 +26,24 @@ public class JwtUtils {
                     .setExpiration(exp)
                     .signWith(SignatureAlgorithm.HS512, jwtBean.getKey())
                     .compact();
+    }
+
+    /**
+     * Util method to generate a email verification token
+     * @param username
+     * @return String
+     */
+    public static String generateVerificationToken(String username, JwtBean jwtBean) {
+        Date iat = new Date();
+        Date exp = new Date(System.currentTimeMillis() + jwtBean.getVerificationExpirationTimeInMillis());
+
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuer(jwtBean.getIssuer())
+                .setIssuedAt(iat)
+                .setExpiration(exp)
+                .signWith(SignatureAlgorithm.HS512, jwtBean.getKey())
+                .compact();
     }
 
     /**
@@ -41,7 +59,7 @@ public class JwtUtils {
             return false;
 
         // If tokens are equal, it is a valid token
-        // We check the expiration to check if the token is still valid in context of expiration
+        // We check the expiration to check if the token is still valid in context of time
         Claims claims = getClaims(token, jwtBean);
 
         Date expiration = claims.getExpiration();
