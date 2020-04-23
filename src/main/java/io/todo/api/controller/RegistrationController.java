@@ -34,7 +34,7 @@ public class RegistrationController {
 
 
     @PostMapping
-    public ResponseEntity<? extends Object> registerNewUser(@RequestBody NewUserRequestModel model){
+    public ResponseEntity<?> registerNewUser(@RequestBody NewUserRequestModel model){
         String password = encodePassword(model.getPassword());
         UserDetailsBO userDetailsBO = buildUserDetailsBO(model, password);
 
@@ -45,10 +45,10 @@ public class RegistrationController {
                     .build();
         } catch (URISyntaxException | MessagingException e) {
             e.printStackTrace();
-            final String errorMessage = "We are facing some issue. Please try again later or contact admin.";
+            ErrorResponse errorResponse = new ErrorResponse("We are facing some issue. Please try again later or contact admin.");
             return ResponseEntity
                     .status(INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse(errorMessage));
+                    .body(errorResponse);
         }
     }
 

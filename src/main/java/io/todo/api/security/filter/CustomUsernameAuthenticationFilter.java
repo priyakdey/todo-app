@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -20,9 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import static org.springframework.http.HttpHeaders.*;
@@ -56,16 +53,14 @@ public class CustomUsernameAuthenticationFilter extends UsernamePasswordAuthenti
             loginModel = parse(request);
         } catch (IOException e) {
             LOGGER.error("Error parsing the request.", e);
-            //TODO: Authentication Service expcetion : Data parsing exception
+            //TODO: Authentication Service exception : Data parsing exception
             throw new RuntimeException(e.getMessage());
         }
 
 
         if (loginModel != null) {
-            // TODO: Get list of authorities
-            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
             Authentication authentication =
-                    new UsernamePasswordAuthenticationToken(loginModel.getUsername(), loginModel.getPassword(), authorities);
+                    new UsernamePasswordAuthenticationToken(loginModel.getUsername(), loginModel.getPassword());
             return super.getAuthenticationManager().authenticate(authentication);
         }
 

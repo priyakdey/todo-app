@@ -49,6 +49,7 @@ public class TaskController {
         }
     }
 
+    @PreAuthorize(value = "#username == authentication.name")
     @GetMapping
     public ResponseEntity<TaskResponseModel> getTasksList
             (@PathVariable String username,
@@ -64,6 +65,7 @@ public class TaskController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize(value = "#username == authentication.name")
     @PutMapping(path = "/{id}")
     public ResponseEntity<?> markCompleted(@PathVariable UUID id) {
         taskService.markCompleted(id);
